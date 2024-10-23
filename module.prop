@@ -1,0 +1,6 @@
+id=bootlooprescue
+name=BootLoop Rescue
+version=1.0
+versionCode=0.9
+author=e1phnx
+description=This module try to detect and fixe bootloops caused by Magisk modules.
