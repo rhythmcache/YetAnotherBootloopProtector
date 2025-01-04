@@ -1,27 +1,28 @@
 #!/system/bin/sh
-#AntiBootLoopScriptBy @e1phn
-
+# YetAnotherBootLoopProtector by @rhythmcache
 LOGFILE="/data/local/tmp/service.log"
 MARKER_DIR="/data/local/tmp"
 MAGISK_MODULES_DIR="/data/adb/modules"
 BOOT_TIMEOUT=120
+PACKAGE="com.android.systemui" #default: SystemUI
+MONITOR_DISABLE_FILE="/data/adb/systemui.monitor.disable"
 
-# logs
+# Log events
 log_event() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOGFILE"
 }
 
-# completed boot ?
+# Check if boot is completed
 is_boot_completed() {
     BOOT_COMPLETED=$(getprop sys.boot_completed)
     if [ "$BOOT_COMPLETED" = "1" ]; then
-        return 0  # Boot completed
+        return 0
     else
-        return 1  # Boot not completed
+        return 1
     fi
 }
 
-# Magisk modules
+# Disable all Magisk modules
 disable_magisk_modules() {
     log_event "Disabling all Magisk modules..."
     for MODULE in "$MAGISK_MODULES_DIR"/*; do
@@ -34,7 +35,7 @@ disable_magisk_modules() {
     done
 }
 
-# markers ?
+# Check for marker files
 check_marker_files() {
     MARKER1="$MARKER_DIR/marker1"
     MARKER2="$MARKER_DIR/marker2"
@@ -58,10 +59,46 @@ check_marker_files() {
     fi
 }
 
-# Mlogic
-log_event "Service started. Waiting for boot completion..."
+# Check if a package is running
+is_package_running() {
+    if pidof "$PACKAGE" > /dev/null; then
+        return 0  # Package is running
+    else
+        return 1  # Package is not running
+    fi
+}
 
-# Create the first marker file if none exists
+# Monitor SystemUI
+monitor_package() {
+    if [ -f "$MONITOR_DISABLE_FILE" ]; then
+        log_event "SystemUI monitoring is disabled. Exiting monitor."
+        return
+    fi
+
+    log_event "Starting continuous monitor for package: $PACKAGE"
+    local MONITOR_TIMEOUT=40  # Total timeout in seconds
+    local CHECK_INTERVAL=5    # Check interval in seconds
+    local FAILURE_TIME=0      # Time elapsed since package stopped running
+
+    while true; do
+        if is_package_running; then
+            log_event "$PACKAGE is running. Resetting failure timer."
+            FAILURE_TIME=0
+        else
+            log_event "$PACKAGE is not running. Failure timer: $FAILURE_TIME seconds."
+            FAILURE_TIME=$((FAILURE_TIME + CHECK_INTERVAL))
+            if [ $FAILURE_TIME -ge $MONITOR_TIMEOUT ]; then
+                log_event "$PACKAGE has not been running for $MONITOR_TIMEOUT seconds. Disabling Magisk modules and rebooting..."
+                disable_magisk_modules
+                reboot
+            fi
+        fi
+        sleep $CHECK_INTERVAL
+    done
+}
+
+# Main logic
+log_event "Service started. Waiting for boot completion..."
 check_marker_files
 
 # Wait for boot to complete
@@ -70,15 +107,20 @@ while [ $SECONDS_PASSED -lt $BOOT_TIMEOUT ]; do
     if is_boot_completed; then
         log_event "Boot completed successfully. Cleaning up marker files."
         rm -f "$MARKER_DIR/marker1" "$MARKER_DIR/marker2" "$MARKER_DIR/marker3"
-        exit 0
+        break
     fi
     sleep 5
     SECONDS_PASSED=$((SECONDS_PASSED + 5))
 done
 
-# If the boot is not completed within 2 minutes, disable Magisk modules and reboot
-log_event "Boot did not complete within $BOOT_TIMEOUT seconds. Disabling Magisk modules and rebooting..."
-disable_magisk_modules
-rm -f "$MARKER_DIR/marker1" "$MARKER_DIR/marker2" "$MARKER_DIR/marker3"
-log_event "Rebooting the device..."
-reboot
+#reboot
+if ! is_boot_completed; then
+    log_event "Boot did not complete within $BOOT_TIMEOUT seconds. Disabling Magisk modules and rebooting..."
+    disable_magisk_modules
+    rm -f "$MARKER_DIR/marker1" "$MARKER_DIR/marker2" "$MARKER_DIR/marker3"
+    log_event "Rebooting the device..."
+    reboot
+fi
+
+#monitoring
+monitor_package
