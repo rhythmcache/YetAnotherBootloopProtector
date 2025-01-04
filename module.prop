@@ -1,6 +1,6 @@
-id=bootlooprescue
-name=BootLoop Rescue
-version=1.0
-versionCode=0.9
-author=e1phnx
-description=This module try to detect and fixe bootloops caused by Magisk modules.
+id=YetAnotherBootloopProtector
+name=Yet Another Bootloop Protector
+version=2
+versionCode=10
+author=rhythmcache.t.me
+description=This module try to detect and fix bootloops caused by Magisk modules.
