@@ -12,7 +12,7 @@
 
 ## Checking Boot Completion:
 
-The script checks whether the system has fully booted by looking at the sys.boot_completed property.
+The script checks whether the system has fully booted.
 
 When three markers are present, the script disables all Magisk modules by creating a disable file in each module's folder. This action prevents those modules from loading during the next boot, which may help the device boot correctly.
 After disabling the modules, the script deletes all marker files and reboots the device.
