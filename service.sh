@@ -97,7 +97,6 @@ monitor_package() {
 }
 # post fs check
 signature() {
-    # Use MODDIR instead of hardcoded /data/adb/
     S1="$MARKER_DIR/s1"
     S2="$MARKER_DIR/s2"
     S3="$MARKER_DIR/s3"
@@ -106,17 +105,19 @@ signature() {
     # Check if any of the files exist
     if [ -f "$S1" ]; then
         DETECTED=1
+        log_event "Found s1"
     fi
     if [ -f "$S2" ]; then
         DETECTED=1
+        log_event "Found s2"
     fi
     if [ -f "$S3" ]; then
         DETECTED=1
+        log_event "Found s3"
     fi
 
-    # If any file is detected, delete all files
     if [ "$DETECTED" -eq 1 ]; then
-        log_event "Post-fs signature detected ...."
+        log_event "Post-fs signature detected..."
         rm -f "$S1" "$S2" "$S3"
     else
         log_event "Warning: Post-fs signature not found."
