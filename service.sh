@@ -1,7 +1,6 @@
-#!/system/bin/sh
 # YetAnotherBootLoopProtector by @rhythmcache
+MARKER_DIR="${0%/*}"
 LOGFILE="/data/local/tmp/service.log"
-MARKER_DIR="/data/local/tmp"
 MAGISK_MODULES_DIR="/data/adb/modules"
 BOOT_TIMEOUT=120
 PACKAGE="com.android.systemui" #default: SystemUI
@@ -96,8 +95,36 @@ monitor_package() {
         sleep $CHECK_INTERVAL
     done
 }
+# post fs check
+signature() {
+    # Use MODDIR instead of hardcoded /data/adb/
+    S1="$MARKER_DIR/s1"
+    S2="$MARKER_DIR/s2"
+    S3="$MARKER_DIR/s3"
+    DETECTED=0
+
+    # Check if any of the files exist
+    if [ -f "$S1" ]; then
+        DETECTED=1
+    fi
+    if [ -f "$S2" ]; then
+        DETECTED=1
+    fi
+    if [ -f "$S3" ]; then
+        DETECTED=1
+    fi
+
+    # If any file is detected, delete all files
+    if [ "$DETECTED" -eq 1 ]; then
+        log_event "Post-fs signature detected ...."
+        rm -f "$S1" "$S2" "$S3"
+    else
+        log_event "Warning: Post-fs signature not found."
+    fi
+}
 
 # Main logic
+signature
 log_event "Service started. Waiting for boot completion..."
 check_marker_files
 
@@ -121,6 +148,5 @@ if ! is_boot_completed; then
     log_event "Rebooting the device..."
     reboot
 fi
-
 #monitoring
 monitor_package
