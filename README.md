@@ -1,7 +1,6 @@
 # Yet Another Bootloop Protector.
 - This module try to protect your device from bootloops amd system ui failures caused by Magisk Modules
 
-[![Telegram](https://img.shields.io/badge/Telegram-Join%20Chat-blue?style=flat-square&logo=telegram)](https://t.me/ximistuffschat)
 
 ## Logic
 
@@ -40,4 +39,6 @@ su -c rm -f /data/adb/systemui.monitor.disable
 
 ### Logs
 - Logs of this module will be found at `/data/local/tmp/service.log`
+
+[![Telegram](https://img.shields.io/badge/Telegram-Join%20Chat-blue?style=flat-square&logo=telegram)](https://t.me/ximistuffschat)
 
