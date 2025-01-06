@@ -34,5 +34,8 @@ to `enable` the systemui monitor , you can just remove that file, or you can run
 su -c rm -f /data/adb/systemui.monitor.disable
 ```
 
+- You can enable or disable all modules by clicking on action button 
+
 ### Logs
 - Logs of this module will be found at `/data/local/tmp/service.log`
+
