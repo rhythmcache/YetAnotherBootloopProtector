@@ -1,6 +1,8 @@
 # Yet Another Bootloop Protector.
 - This module try to protect your device from bootloops amd system ui failures caused by Magisk Modules
 
+[![Telegram](https://img.shields.io/badge/Telegram-Join%20Chat-blue?style=flat-square&logo=telegram)](https://t.me/ximistuffschat)
+
 ## Logic
 
 • Each time the device fails to complete the boot, the script creates a "marker"
