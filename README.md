@@ -4,18 +4,17 @@
 
 ## Logic
 
-• Each time the device fails to complete the boot, the script creates a "marker"
-## If the script finds:
+• Each time the device fails to complete the boot, the module creates a "marker"
+## If the module finds:
 - No marker files: it creates the first marker (marker1).
 - One marker file: it creates a second marker (marker2).
 - Two marker files: it creates a third marker (marker3).
-- When three markers are present, the script considers the device to be in a boot loop.
+- When three markers are present, the module considers the device to be in a boot loop.
 
-- When three markers are present, the script disables all Magisk modules by creating a disable file in each module's folder. This action prevents those modules from loading during the next boot, which may help the device boot correctly.
-After disabling the modules, the script deletes all marker files and reboots the device.
+- When three markers are present, the module disables all Magisk modules by creating a disable file in each module's folder. This action prevents those modules from loading during the next boot, which may help the device boot correctly.
 
-- The script waits for the boot to complete, checking every 5 seconds.
-If the boot does not complete within a set timeout period (2 minutes by default), the script assumes there is a boot problem, disables all Magisk modules, and reboots the device to attempt a clean boot.
+- The module waits for the boot to complete, checking every 5 seconds.
+If the boot does not complete within a set timeout period (2 minutes by default), the script assumes there is a boot problem, disables all Magisk modules, and reboots the device.
 
 
 
@@ -30,7 +29,7 @@ If the boot does not complete within a set timeout period (2 minutes by default)
 su -c touch /data/adb/systemui.monitor.disable
 ```
 
-to `enable` the systemui monitor , you can just remove that file, or you can run
+to `enable` the systemui monitor , you can just remove that file, or you can run , (changes will take place after the next boot)
 ```
 su -c rm -f /data/adb/systemui.monitor.disable
 ```
