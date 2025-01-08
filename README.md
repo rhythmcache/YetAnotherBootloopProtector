@@ -9,9 +9,7 @@
 - No marker files: it creates the first marker (marker1).
 - One marker file: it creates a second marker (marker2).
 - Two marker files: it creates a third marker (marker3).
-- When three markers are present, the module considers the device to be in a boot loop.
-
-- When three markers are present, the module disables all Magisk modules by creating a disable file in each module's folder. This action prevents those modules from loading during the next boot, which may help the device boot correctly.
+- When three markers are present, the module considers the device to be in a boot loop , and  it disables all Magisk modules by creating a disable file in each module's folder. This action prevents those modules from loading during the next boot, which may help the device boot correctly.
 
 - The module waits for the boot to complete, checking every 5 seconds.
 If the boot does not complete within a set timeout period (2 minutes by default), the module assumes there is a boot problem, disables all Magisk modules, and reboots the device.
