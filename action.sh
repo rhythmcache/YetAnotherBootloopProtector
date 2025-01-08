@@ -1,9 +1,7 @@
 #!/system/bin/sh
 # Yet Another Bootloop Protector
-
+#github.com/rhythmcache
 MODDIR=/data/adb/modules
-
-clear
 echo "╔═══════════════════════════════════╗"
 echo "║  Yet Another Bootloop Protector   ║"
 echo "╚═══════════════════════════════════╝"
@@ -15,6 +13,7 @@ echo "┌───────────────────────�
 echo "│  [↑] VOLUME UP   => DISABLE ALL  │"
 echo "│  [↓] VOLUME DOWN => ENABLE ALL   │"
 echo "└──────────────────────────────────┘"
+
 disable_modules() {
   echo ""
   echo "→ Disabling all modules..."
@@ -58,19 +57,18 @@ enable_modules() {
 }
 echo ""
 echo "Waiting for input..."
-getevent -qlc 1 | while read -r line; do
-  if echo "$line" | grep -q "KEY_VOLUMEUP"; then
+while true; do
+  event=$(getevent -qlc 1 2>/dev/null)
+  if echo "$event" | grep -q "KEY_VOLUMEUP"; then
     echo "→ VOLUME UP detected: Disabling all modules..."
     disable_modules
     break
-  elif echo "$line" | grep -q "KEY_VOLUMEDOWN"; then
+  elif echo "$event" | grep -q "KEY_VOLUMEDOWN"; then
     echo "→ VOLUME DOWN detected: Enabling all modules..."
     enable_modules
     break
   fi
 done
-
-# Wait before exiting
 echo "⚠️ Some modules might not have been enabled/disabled. Please handle them manually if needed."
 echo "Exiting in 5 seconds..."
 sleep 5
