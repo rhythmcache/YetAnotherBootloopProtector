@@ -1,5 +1,5 @@
 # Yet Another Bootloop Protector.
-- This module try to protect your device from bootloops amd system ui failures caused by Magisk Modules
+- This module try to protect your device from bootloops amd system ui failures caused by Magisk/KernelSU/APatch Modules
 
 
 ## Logic
@@ -14,7 +14,7 @@
 - When three markers are present, the module disables all Magisk modules by creating a disable file in each module's folder. This action prevents those modules from loading during the next boot, which may help the device boot correctly.
 
 - The module waits for the boot to complete, checking every 5 seconds.
-If the boot does not complete within a set timeout period (2 minutes by default), the script assumes there is a boot problem, disables all Magisk modules, and reboots the device.
+If the boot does not complete within a set timeout period (2 minutes by default), the module assumes there is a boot problem, disables all Magisk modules, and reboots the device.
 
 
 
@@ -34,7 +34,7 @@ to `enable` the systemui monitor , you can just remove that file, or you can run
 su -c rm -f /data/adb/systemui.monitor.disable
 ```
 
-- You can enable or disable all modules by clicking on action button 
+- You can enable or disable all modules by clicking on action button in Magisk/KSU
 
 ### Logs
 - Logs of this module will be found at `/data/local/tmp/service.log`
