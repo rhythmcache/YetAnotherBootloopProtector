@@ -37,4 +37,7 @@ su -c rm -f /data/adb/systemui.monitor.disable
 ### Logs
 - Logs of this module will be found at `/data/local/tmp/service.log`
 
-[![Download (Total: ![GitHub All Releases](https://img.shields.io/github/downloads/rhythmcache/YetAnotherBootloopProtector/total?style=for-the-badge))](https://github.com/rhythmcache/YetAnotherBootloopProtector/releases/download/V4/YetAnotherBootloopProtector-main-v4.zip)
+
+---
+[![Download Now](https://img.shields.io/badge/Download-Now-brightgreen?style=for-the-badge&logo=github)](https://github.com/rhythmcache/YetAnotherBootloopProtector/releases/download/V4/YetAnotherBootloopProtector-main-v4.zip)
+![Total Downloads](https://img.shields.io/github/downloads/rhythmcache/YetAnotherBootloopProtector/total?label=Total%20Downloads&style=for-the-badge)
