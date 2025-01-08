@@ -3,4 +3,4 @@ name=Yet Another Bootloop Protector
 version=3
 versionCode=11
 author=rhythmcache.t.me
-description=This module try to detect and fix bootloops caused by Magisk modules.
+description=This module try to protect your device from bootloops and SystemUI failures caused by Magisk/KernelSU/Apatch Modules
