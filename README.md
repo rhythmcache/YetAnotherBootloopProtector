@@ -1,5 +1,5 @@
 # Yet Another Bootloop Protector.
-- This module try to protect your device from bootloops amd system ui failures caused by Magisk/KernelSU/APatch Modules
+- This module try to protect your device from bootloops and system ui failures caused by Magisk/KernelSU/APatch Modules
 
 
 ## Logic
