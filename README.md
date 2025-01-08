@@ -39,5 +39,5 @@ su -c rm -f /data/adb/systemui.monitor.disable
 ### Logs
 - Logs of this module will be found at `/data/local/tmp/service.log`
 
-[![Telegram](https://img.shields.io/badge/Telegram-Join%20Chat-blue?style=flat-square&logo=telegram)](https://t.me/ximistuffschat)
 
+[![Download](https://img.shields.io/badge/Download-Now-brightgreen?style=flat-square&logo=github)](https://github.com/rhythmcache/YetAnotherBootloopProtector/releases/download/V4/YetAnotherBootloopProtector-main-v4.zip)
