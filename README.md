@@ -4,10 +4,9 @@
 [![Download](https://img.shields.io/badge/Download-Red?style=for-the-badge&logo=github)](https://github.com/rhythmcache/YetAnotherBootloopProtector/releases/download/V4/YetAnotherBootloopProtector-main-v4.zip)
 
 
-## Logic
-
+## How does it work?
 • Each time the device fails to complete the boot, the module creates a "marker"
-## If the module finds:
+
 - No marker files: it creates the first marker (marker1).
 - One marker file: it creates a second marker (marker2).
 - Two marker files: it creates a third marker (marker3).
