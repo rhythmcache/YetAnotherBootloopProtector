@@ -38,7 +38,7 @@ su -c rm -f /data/adb/systemui.monitor.disable
 
 ### Logs
 - Logs of this module will be found at `/data/local/tmp/service.log`
-
+- you can run `rm -f /data/local/tmp/service.log` to clear the logs.
 
 ---
 ![Total Downloads](https://img.shields.io/github/downloads/rhythmcache/YetAnotherBootloopProtector/total?label=Total%20Downloads&style=for-the-badge)
