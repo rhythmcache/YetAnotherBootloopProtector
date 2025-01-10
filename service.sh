@@ -2,7 +2,7 @@
 MARKER_DIR="${0%/*}"
 LOGFILE="/data/local/tmp/service.log"
 MAGISK_MODULES_DIR="/data/adb/modules"
-BOOT_TIMEOUT=120
+BOOT_TIMEOUT=100
 PACKAGE="com.android.systemui" #default: SystemUI
 MONITOR_DISABLE_FILE="/data/adb/systemui.monitor.disable"
 
@@ -81,7 +81,7 @@ monitor_package() {
 
     while true; do
         if is_package_running; then
-            log_event "$PACKAGE is running. Resetting failure timer."
+            #log_event "$PACKAGE is running. Resetting failure timer."
             FAILURE_TIME=0
         else
             log_event "$PACKAGE is not running. Failure timer: $FAILURE_TIME seconds."
