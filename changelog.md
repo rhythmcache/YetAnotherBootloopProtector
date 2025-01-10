@@ -1,1 +1,1 @@
-- Initial Release
+- Changed the Boot Timeout to 100 and removed the logging of SystemUI status every 5 seconds as it was generating excessively large log files
