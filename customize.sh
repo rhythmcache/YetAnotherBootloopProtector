@@ -27,7 +27,7 @@ done
 ui_print ""
 mkdir -p "/data/adb/service.d"
 mv "$MODPATH/.status.sh" "/data/adb/service.d"
-chmod 777 "/data/adb/service.d/.status.sh"
+chmod +x "/data/adb/service.d/.status.sh"
 set_perm_recursive "$MODPATH" 0 0 0755 0644
 ui_print ""
 ui_print "[*] Installation complete!"
