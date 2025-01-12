@@ -1,7 +1,7 @@
 id=YetAnotherBootloopProtector
 name=Yet Another Bootloop Protector
-version=6
-versionCode=14
+version=7
+versionCode=15
 author=rhythmcache.t.me
 description=This module try to detect and fix bootloops caused by Magisk modules.
 updateJson=https://raw.githubusercontent.com/rhythmcache/YetAnotherBootloopProtector/main/update.Json
