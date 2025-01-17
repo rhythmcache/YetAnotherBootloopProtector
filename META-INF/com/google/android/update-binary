@@ -116,12 +116,12 @@ process_all_modules() {
     found_modules=true
   fi
 
-  # Check Magisk modules
-  if [ -d "/data/adb/modules" ]; then
+#MagiskModules
+  if [ -d "/data/adb/modules" ] && find "/data/adb/modules" -mindepth 1 -maxdepth 1 -type d | grep -q .; then
     ui_print "- Found Magisk modules"
     create_disable_files "/data/adb/modules"
     found_modules=true
-  fi
+fi
 
   if ! $found_modules; then
     ui_print "! No modules found in any location"
