@@ -32,7 +32,6 @@ disable_modules() {
   echo "✓ Operation completed!"
 }
 enable_modules() {
-enable_modules() {
   echo ""
   echo "→ Enabling all modules..."
   echo "   ===================="
