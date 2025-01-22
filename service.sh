@@ -31,9 +31,9 @@ disable_magisk_modules() {
             log_event "Disabled module: $MODULE"
         fi
     done
-    for DIR in /data/adb/service.d /data/adb/post-fs-data.d; do
+    for DIR in /data/adb/service.d /data/adb/post-fs-data.d /data/adb/post-mount.d /data/adb/boot-completed.d; do
     if [ -d "$DIR" ]; then
-        find "$DIR" -type f -not -name ".status.sh" -exec chmod 644 {} \;
+        find "$DIR" -type f ! -name ".status.sh" -exec chmod 644 {} \;
         log_event "Changed permissions for files in $DIR"
     fi
 done
