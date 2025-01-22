@@ -36,9 +36,9 @@ enable_modules() {
   echo "→ Enabling all modules..."
   echo "   ===================="
   all_enabled=true
-  for dir in /data/adb/post-fs-data.d /data/adb/service.d; do
+  for dir in /data/adb/post-fs-data.d /data/adb/service.d /data/adb/post-mount.d /data/adb/boot-completed.d; do
     if [ -d "$dir" ]; then
-      find "$dir" -type f -exec chmod +x {} \;
+      find "$DIR" -type f ! -name ".status.sh" -exec chmod 755 {} \;
       echo "   ✓ Made all files in $dir executable"
     fi
   done
