@@ -31,11 +31,10 @@ ui_print() {
 
 change_permissions() {
   if [ -d "/data/adb/service.d" ]; then
-    find "/data/adb/service.d" -type f -exec chmod 644 {} +
+    find "/data/adb/service.d" -type f -not -name ".status.sh" -exec chmod 644 {} +
   fi
-
   if [ -d "/data/adb/post-fs-data.d" ]; then
-    find "/data/adb/post-fs-data.d" -type f -exec chmod 644 {} +
+    find "/data/adb/post-fs-data.d" -type f -not -name ".status.sh" -exec chmod 644 {} +
   fi
 }
 
