@@ -185,13 +185,8 @@ monitor_package() {
             log_event "$PACKAGE is not running. Failure timer: $FAILURE_TIME seconds."
             FAILURE_TIME=$((FAILURE_TIME + CHECK_INTERVAL))
             if [ ! -f "$lock_file" ]; then
-                systemui_monitor &
-            else
-            
-            : #DontRemoveThis
-            
-            fi
-            
+                systemui_monitor &  
+            fi 
             if [ $FAILURE_TIME -ge $MONITOR_TIMEOUT ]; then
                 log_event "$PACKAGE has not been running for $MONITOR_TIMEOUT seconds. Disabling Magisk modules and rebooting..."
                 disable_magisk_modules
