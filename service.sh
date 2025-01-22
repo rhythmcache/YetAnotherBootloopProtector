@@ -79,13 +79,20 @@ is_package_running() {
 
 # monitor zygote
 zygote_monitor() {
-  dur=25   #  duration
-  int=3    # interval
+  dur=30   #  duration
+  int=4    # interval
   max=4    # Max pid changes
   changes=0
   last_pid=""
   start=$(date +%s)
-
+  
+arch=$(getprop ro.product.cpu.abi)
+  if [[ "$arch" == "arm64-v8a" || "$arch" == "x86_64" ]]; then
+    check="zygote64"
+  else
+    check="zygote"
+  fi
+  
   log_event "Zygote monitor started."
 
   while :; do
@@ -94,7 +101,7 @@ zygote_monitor() {
       break
     fi
 
-    cur_pid=$(pidof zygote 2>/dev/null || echo "")
+    cur_pid=$(pidof "$check" 2>/dev/null || echo "")
     if [ -n "$cur_pid" ] && [ "$cur_pid" != "$last_pid" ]; then
       changes=$((changes + 1))
       log_event "PID changed: $last_pid -> $cur_pid (Count: $changes)"
@@ -113,7 +120,7 @@ zygote_monitor() {
 
   log_event "Zygote is OK"
 }
-
+  
 #SystemUI - PID
 
 systemui_monitor() {
@@ -167,7 +174,7 @@ monitor_package() {
     fi
 
     log_event "Starting continuous monitor for package: $PACKAGE"
-    local MONITOR_TIMEOUT=40  # Total timeout in seconds
+    local MONITOR_TIMEOUT=25  # Total timeout in seconds
     local CHECK_INTERVAL=5    # Check interval in seconds
     local FAILURE_TIME=0      # Time elapsed since package stopped running
 
