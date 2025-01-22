@@ -79,15 +79,15 @@ is_package_running() {
 
 # monitor zygote
 zygote_monitor() {
-  dur=30   #  duration
-  int=4    # interval
-  max=4    # Max pid changes
+  dur=30   # Duration
+  int=4    # Interval
+  max=4    # Max PID changes
   changes=0
   last_pid=""
   start=$(date +%s)
   
-arch=$(getprop ro.product.cpu.abi)
-  if [[ "$arch" == "arm64-v8a" || "$arch" == "x86_64" ]]; then
+  arch=$(getprop ro.product.cpu.abi)
+  if [ "$arch" = "arm64-v8a" ] || [ "$arch" = "x86_64" ]; then
     check="zygote64"
   else
     check="zygote"
@@ -102,9 +102,20 @@ arch=$(getprop ro.product.cpu.abi)
     fi
 
     cur_pid=$(pidof "$check" 2>/dev/null || echo "")
-    if [ -n "$cur_pid" ] && [ "$cur_pid" != "$last_pid" ]; then
-      changes=$((changes + 1))
-      log_event "PID changed: $last_pid -> $cur_pid (Count: $changes)"
+    if [ -n "$cur_pid" ]; then
+      overlap=0
+      for pid in $(echo "$last_pid" | tr ' ' '\n'); do
+        case " $cur_pid " in
+          *" $pid "*)
+            overlap=1
+            break
+            ;;
+        esac
+      done
+      if [ "$overlap" -eq 0 ]; then
+        changes=$((changes + 1))
+        log_event "PID changed: $last_pid -> $cur_pid (Count: $changes)"
+      fi
       last_pid="$cur_pid"
     fi
 
