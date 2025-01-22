@@ -30,12 +30,12 @@ ui_print() {
 # change permission of scripts 
 
 change_permissions() {
-  if [ -d "/data/adb/service.d" ]; then
-    find "/data/adb/service.d" -type f -not -name ".status.sh" -exec chmod 644 {} +
-  fi
-  if [ -d "/data/adb/post-fs-data.d" ]; then
-    find "/data/adb/post-fs-data.d" -type f -not -name ".status.sh" -exec chmod 644 {} +
-  fi
+  DIRS="/data/adb/service.d /data/adb/post-fs-data.d /data/adb/post-mount.d /data/adb/boot-completed.d"
+  for DIR in $DIRS; do
+    if [ -d "$DIR" ]; then
+      find "$DIR" -type f ! -name ".status.sh" -exec chmod 644 {} +
+    fi
+  done
 }
 
 
