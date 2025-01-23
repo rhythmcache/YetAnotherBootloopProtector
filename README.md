@@ -1,7 +1,7 @@
 # Yet Another Bootloop Protector.
 - This module try to protect your device from bootloops and system ui failures caused by Magisk/KernelSU/APatch Modules.
 
-[![Telegram](https://img.shields.io/badge/Telegram-RhythmCache-blue?logo=telegram)](https://rhythmcache.t.me)
+[![Telegram](https://img.shields.io/badge/Telegram-blue?logo=telegram)](https://rhythmcache.t.me)
 
 ## Installation
 
