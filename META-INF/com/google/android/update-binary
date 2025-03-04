@@ -31,6 +31,7 @@ ui_print() {
 
 # change permission of scripts 
 
+
 change_permissions() {
   DIRS="/data/adb/service.d /data/adb/post-fs-data.d /data/adb/post-mount.d /data/adb/boot-completed.d"
 
@@ -47,20 +48,35 @@ change_permissions() {
 
   for DIR in $DIRS; do
     if [ -d "$DIR" ]; then
-      for SCRIPT in "$DIR"/*; do
+      # Use find to locate all scripts in the directory
+      find "$DIR" -type f -name "*.sh" | while read -r SCRIPT; do
         SCRIPT_NAME=$(basename "$SCRIPT")
+
+        # Skip .status.sh and allowed scripts
         case "$SCRIPT_NAME" in
-  .status.sh) continue ;;
-  "$allowed_scripts") continue ;;
-  *) chmod 644 "$SCRIPT" ;;
+          .status.sh) continue ;;
         esac
+
+        skip=false
+        for allowed_script in $allowed_scripts; do
+          if [ "$SCRIPT_NAME" = "$allowed_script" ]; then
+            skip=true
+            break
+          fi
+        done
+
+        if $skip; then
+          continue
+        fi
+
+        # Change permissions for non-allowed scripts
+        chmod 644 "$SCRIPT"
       done
     fi
   done
 }
 
 
-# Permissions Check
 check_encryption() {
   if [ ! -d "/data/adb" ]; then
     ui_print "Error: Can't Access /data/adb, Data is encrypted?"
