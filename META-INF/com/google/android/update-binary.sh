@@ -30,8 +30,6 @@ ui_print() {
 }
 
 # change permission of scripts 
-
-
 change_permissions() {
   DIRS="/data/adb/service.d /data/adb/post-fs-data.d /data/adb/post-mount.d /data/adb/boot-completed.d"
 
@@ -39,23 +37,24 @@ change_permissions() {
   allowed_scripts=""
   if [ -f "$file2" ]; then
     while IFS= read -r line; do
-      case "$line" in
-        \#*|"") continue ;;  # Ignore comments and empty lines
-        *) allowed_scripts="$allowed_scripts $line" ;;
-      esac
+      if [ "${line#\#}" != "$line" ] || [ -z "$line" ]; then
+        continue  # Ignore comments and empty lines
+      else
+        allowed_scripts="$allowed_scripts $line"
+      fi
     done < "$file2"
   fi
 
   for DIR in $DIRS; do
     if [ -d "$DIR" ]; then
-      # Use find to locate all scripts in the directory
-      find "$DIR" -type f -name "*.sh" | while read -r SCRIPT; do
+      # Use find to locate all files in the directory (not just .sh files)
+      find "$DIR" -type f | while read -r SCRIPT; do
         SCRIPT_NAME=$(basename "$SCRIPT")
 
-        # Skip .status.sh and allowed scripts
-        case "$SCRIPT_NAME" in
-          .status.sh) continue ;;
-        esac
+        # Skip .status.sh
+        if [ "$SCRIPT_NAME" = ".status.sh" ]; then
+          continue
+        fi
 
         skip=false
         for allowed_script in $allowed_scripts; do
@@ -69,7 +68,7 @@ change_permissions() {
           continue
         fi
 
-        # Change permissions for non-allowed scripts
+        # Change permissions for non-allowed files
         chmod 644 "$SCRIPT"
       done
     fi
@@ -93,10 +92,11 @@ create_disable_files() {
   allowed_modules=""
   if [ -f "$file" ]; then
     while IFS= read -r line; do
-      case "$line" in
-        \#*|"") continue ;;  # Ignore comments and empty lines
-        *) allowed_modules="$allowed_modules $line" ;;
-      esac
+      if [ "${line#\#}" != "$line" ] || [ -z "$line" ]; then
+        continue  # Ignore comments and empty lines
+      else
+        allowed_modules="$allowed_modules $line"
+      fi
     done < "$file"
   fi
 
@@ -106,15 +106,14 @@ create_disable_files() {
       module_name=$(basename "$module_dir")
 
       # Skip disabling if the module is in the allowlist
-      case " $allowed_modules " in
-        *" $module_name "*) continue ;;
-        *) 
-          ui_print "- Disabling: $module_name"
-          touch "$module_dir/disable" || exit 1
-          chown 0:0 "$module_dir/disable"
-          chmod 644 "$module_dir/disable"
-        ;;
-      esac
+      if [ -n "$(echo " $allowed_modules " | grep " $module_name ")" ]; then
+        continue
+      else
+        ui_print "- Disabling: $module_name"
+        touch "$module_dir/disable" || exit 1
+        chown 0:0 "$module_dir/disable"
+        chmod 644 "$module_dir/disable"
+      fi
     fi
   done
 }
