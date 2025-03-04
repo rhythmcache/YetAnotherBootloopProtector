@@ -3,7 +3,6 @@ MODULE_DIR="/data/adb/modules/YetAnotherBootloopProtector"
 YABP_DIR="/data/adb/YABP"
 SYSTEMUI_MONITOR_DISABLE="/data/adb/systemui.monitor.disable"
 MODULE_PROP="$MODULE_DIR/module.prop"
-ALLOWED_MODULES_FILE="$YABP_DIR/allowed-modules.txt"
 
 REQUIRED_FILES="\
     $MODULE_DIR/action.sh \
@@ -11,17 +10,7 @@ REQUIRED_FILES="\
     $MODULE_DIR/post-fs-data.sh \
     $MODULE_DIR/uninstall.sh"
 
-# Ensure /data/adb/YABP directory exists
-mkdir -p "$YABP_DIR"
-
-# Check if allowed-modules.txt exists in YABP_DIR, copy from MODULE_DIR if available
-if [ ! -f "$ALLOWED_MODULES_FILE" ]; then
-    if [ -f "$MODULE_DIR/allowed-modules.txt" ]; then
-        cp "$MODULE_DIR/allowed-modules.txt" "$ALLOWED_MODULES_FILE"
-    else
-        touch "$ALLOWED_MODULES_FILE"
-    fi
-fi
+    
 
 # Check if required module files exist, disable module if missing
 for file in $REQUIRED_FILES; do
