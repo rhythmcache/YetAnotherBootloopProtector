@@ -1,0 +1,3 @@
+- whitelist for modules and scripts
+- whitelisted modules/scripts wont be disabled if a bootloop is a detected
+- you can add in /data/adb/YABP/ or you can use webui
