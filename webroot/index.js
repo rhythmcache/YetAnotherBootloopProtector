@@ -81,14 +81,6 @@ async function openAllowedModulesDialog() {
     document.getElementById("allowedModulesList").innerHTML = html;
     document.getElementById("allowedModulesDialog").style.display = "flex";
 }
-async function saveAllowedModules() {
-    const selectedModules = Array.from(document.querySelectorAll("#allowedModulesList input:checked"))
-        .map(input => input.value)
-        .join("\n");
-    await exec('mkdir -p /data/adb/YABP && touch /data/adb/YABP/allowed-modules.txt');
-    await exec(`echo "${selectedModules}" > /data/adb/YABP/allowed-modules.txt`);
-    document.getElementById("allowedModulesDialog").style.display = "none";
-}
 async function openAllowedScriptsDialog() {
     const scriptDirs = [
         "/data/adb/service.d",
@@ -117,16 +109,37 @@ async function openAllowedScriptsDialog() {
     document.getElementById("allowedScriptsList").innerHTML = html;
     document.getElementById("allowedScriptsDialog").style.display = "flex";
 }
+
 async function saveAllowedScripts() {
+    const { stdout: existingContent } = await exec('cat /data/adb/YABP/allowed-scripts.txt 2>/dev/null || echo ""');
+    const commentLines = existingContent
+        .split("\n")
+        .filter(line => line.trim().startsWith('#'));
     const selectedScripts = Array.from(document.querySelectorAll("#allowedScriptsList input:checked"))
-        .map(input => input.value)
-        .join("\n");
+        .map(input => input.value);
+    const finalContent = [...commentLines, ...selectedScripts].join("\n");
 
     await exec('mkdir -p /data/adb/YABP && touch /data/adb/YABP/allowed-scripts.txt');
-
-    await exec(`echo "${selectedScripts}" > /data/adb/YABP/allowed-scripts.txt`);
+    await exec(`echo "${finalContent}" > /data/adb/YABP/allowed-scripts.txt`);
     document.getElementById("allowedScriptsDialog").style.display = "none";
 }
+
+
+async function saveAllowedModules() {
+    const { stdout: existingContent } = await exec('cat /data/adb/YABP/allowed-modules.txt 2>/dev/null || echo ""');
+    const commentLines = existingContent
+        .split("\n")
+        .filter(line => line.trim().startsWith('#'));
+    const selectedModules = Array.from(document.querySelectorAll("#allowedModulesList input:checked"))
+        .map(input => input.value);
+    const finalContent = [...commentLines, ...selectedModules].join("\n");
+    
+    await exec('mkdir -p /data/adb/YABP && touch /data/adb/YABP/allowed-modules.txt');
+    await exec(`echo "${finalContent}" > /data/adb/YABP/allowed-modules.txt`);
+    document.getElementById("allowedModulesDialog").style.display = "none";
+}
+
+
 
 function closeAllowedModulesDialog() {
     document.getElementById("allowedModulesDialog").style.display = "none";
