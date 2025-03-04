@@ -25,63 +25,72 @@ is_boot_completed() {
 		return 1
 	fi
 }
-
-# Disable All Magisk Modules
+# disable modules
 disable_magisk_modules() {
-	log_event "Disabling all Magisk modules..."
-
-	# read allowed modules
-	allowed_modules=""
-	if [ -f "$file" ]; then
-		while IFS= read -r line; do
-			case "$line" in
-			\#* | "") continue ;;
-			*) allowed_modules="$allowed_modules $line" ;;
-			esac
-		done <"$file"
-	fi
-
-	allowed_scripts=""
-	if [ -f "$file2" ]; then
-		while IFS= read -r line; do
-			case "$line" in
-			\#* | "") continue ;;
-			*) allowed_scripts="$allowed_scripts $line" ;;
-			esac
-		done <"$file2"
-	fi
-	for MODULE in "$MAGISK_MODULES_DIR"/*; do
-		if [ -d "$MODULE" ]; then
-			MODULE_NAME=$(basename "$MODULE")
-			case " $allowed_modules " in
-			*" $MODULE_NAME "*) log_event "Skipping module: $MODULE_NAME" ;;
-			*)
-				touch "$MODULE/disable"
-				log_event "Disabled module: $MODULE_NAME"
-				;;
-			esac
-		fi
-	done
-	for DIR in /data/adb/service.d /data/adb/post-fs-data.d /data/adb/post-mount.d /data/adb/boot-completed.d; do
-		if [ -d "$DIR" ]; then
-			for SCRIPT in "$DIR"/*; do
-				SCRIPT_NAME=$(basename "$SCRIPT")
-				case "$SCRIPT_NAME" in
-				".status.sh") log_event "skipping .status.sh" ;;
-				*)
-					case " $allowed_scripts " in
-					*" $SCRIPT_NAME "*) log_event "Skipping script: $SCRIPT_NAME" ;;
-					*)
-						chmod 644 "$SCRIPT"
-						log_event "Changed permissions for script: $SCRIPT_NAME"
-						;;
-					esac
-					;;
-				esac
-			done
-		fi
-	done
+  log_event "Disabling all Magisk modules..."
+  
+  # Read allowed modules  
+  allowed_modules=""  
+  if [ -f "$file" ]; then  
+    while IFS= read -r line; do  
+      case "$line" in  
+      \#* | "") continue ;;  
+      *) allowed_modules="$allowed_modules $line" ;;  
+      esac  
+    done < "$file"  
+  fi  
+  
+  # Read allowed scripts
+  allowed_scripts=""  
+  if [ -f "$file2" ]; then  
+    while IFS= read -r line; do  
+      case "$line" in  
+      \#* | "") continue ;;  
+      *) allowed_scripts="$allowed_scripts $line" ;;  
+      esac  
+    done < "$file2"  
+  fi  
+  
+  # Process modules using find
+  find "$MAGISK_MODULES_DIR" -mindepth 1 -maxdepth 1 -type d | while read -r MODULE; do
+    MODULE_NAME=$(basename "$MODULE")
+    if [[ " $allowed_modules " == *" $MODULE_NAME "* ]]; then
+      log_event "Skipping module: $MODULE_NAME"
+    else
+      touch "$MODULE/disable"  
+      log_event "Disabled module: $MODULE_NAME"
+    fi
+  done
+  
+  # Process scripts using find
+  for DIR in /data/adb/service.d /data/adb/post-fs-data.d /data/adb/post-mount.d /data/adb/boot-completed.d; do
+    if [ -d "$DIR" ]; then
+      find "$DIR" -mindepth 1 -maxdepth 1 -type f | while read -r SCRIPT; do
+        SCRIPT_NAME=$(basename "$SCRIPT")
+        
+        # Skip status.sh file
+        if [ "$SCRIPT_NAME" = ".status.sh" ]; then
+          log_event "Skipping .status.sh"
+          continue
+        fi
+        
+        # Check if script is in allowed list
+        if [[ " $allowed_scripts " == *" $SCRIPT_NAME "* ]]; then
+          log_event "Skipping script: $SCRIPT_NAME"
+        else
+          chmod 644 "$SCRIPT"
+          log_event "Changed permissions for script: $SCRIPT_NAME"
+        fi
+      done
+      
+      # Log if no scripts found in directory
+      if [ -z "$(find "$DIR" -mindepth 1 -maxdepth 1 -type f 2>/dev/null)" ]; then
+        log_event "No scripts found in $DIR"
+      fi
+    fi
+  done
 }
+
 # Check for marker files
 check_marker_files() {
 	MARKER1="$MARKER_DIR/marker1"
