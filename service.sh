@@ -26,6 +26,7 @@ is_boot_completed() {
 	fi
 }
 # disable modules
+
 disable_magisk_modules() {
   log_event "Disabling all Magisk modules..."
   
@@ -33,10 +34,11 @@ disable_magisk_modules() {
   allowed_modules=""  
   if [ -f "$file" ]; then  
     while IFS= read -r line; do  
-      case "$line" in  
-      \#* | "") continue ;;  
-      *) allowed_modules="$allowed_modules $line" ;;  
-      esac  
+      if [ "${line#\#}" != "$line" ] || [ -z "$line" ]; then
+        continue
+      else
+        allowed_modules="$allowed_modules $line"
+      fi
     done < "$file"  
   fi  
   
@@ -44,17 +46,18 @@ disable_magisk_modules() {
   allowed_scripts=""  
   if [ -f "$file2" ]; then  
     while IFS= read -r line; do  
-      case "$line" in  
-      \#* | "") continue ;;  
-      *) allowed_scripts="$allowed_scripts $line" ;;  
-      esac  
+      if [ "${line#\#}" != "$line" ] || [ -z "$line" ]; then
+        continue
+      else
+        allowed_scripts="$allowed_scripts $line"
+      fi
     done < "$file2"  
   fi  
   
   # Process modules using find
   find "$MAGISK_MODULES_DIR" -mindepth 1 -maxdepth 1 -type d | while read -r MODULE; do
     MODULE_NAME=$(basename "$MODULE")
-    if [[ " $allowed_modules " == *" $MODULE_NAME "* ]]; then
+    if [ -n "$(echo " $allowed_modules " | grep " $MODULE_NAME ")" ]; then
       log_event "Skipping module: $MODULE_NAME"
     else
       touch "$MODULE/disable"  
@@ -75,7 +78,7 @@ disable_magisk_modules() {
         fi
         
         # Check if script is in allowed list
-        if [[ " $allowed_scripts " == *" $SCRIPT_NAME "* ]]; then
+        if [ -n "$(echo " $allowed_scripts " | grep " $SCRIPT_NAME ")" ]; then
           log_event "Skipping script: $SCRIPT_NAME"
         else
           chmod 644 "$SCRIPT"
