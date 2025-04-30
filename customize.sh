@@ -9,7 +9,7 @@ ui_print "-----------------------------------------"
 ui_print "  🔼 Press VOLUME UP   => ENABLE"
 ui_print "  🔽 Press VOLUME DOWN => DISABLE"
 ui_print "-----------------------------------------"
-ui_print "  Waiting for your choice (10s timeout)..."
+ui_print "  Waiting for your choice ( ${timeout}s timeout )..."
 ui_print ""
 
 
