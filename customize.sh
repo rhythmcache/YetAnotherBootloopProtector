@@ -1,5 +1,5 @@
 #!/bin/sh
-
+timeout=10 #change value to change timeout 
 ui_print "╔════════════════════════════════════════╗"
 ui_print "║        Yet Another Bootloop Protector      ║"
 ui_print "╚════════════════════════════════════════╝"
@@ -15,7 +15,7 @@ ui_print ""
 
 #ref "https://github.com/Magisk-Modules-Alt-Repo/YetAnotherBootloopProtector/issues/2#issue-3012688788"
 
-timeout=10 #change value to change timeout 
+
 while true; do
 	event=$(timeout ${timeout} getevent -qlc 1 2>/dev/null)
 	if [ $? -eq 124 ]; then
